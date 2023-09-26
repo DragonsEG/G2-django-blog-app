@@ -1,0 +1,25 @@
+{% extends "blog/base.html" %}
+
+{% block title %}My Blog{% endblock %}
+
+{% block content %}
+
+    <h1 class="my-3">My Blog</h1>
+    <h2 class="my-5"><a href="{% url 'blog:create_post' %}" style="color: rgb(65, 209, 65);">Create New Post...</a></h2>
+
+    <h2 class="my-5"><a href="{% url 'blog:drafted_post' %}" style="color: red;">See Your Drafted Posts...</a></h2>
+
+    {% for count,post in zipped %}
+    <h3>
+        <a href="{% url 'blog:post_detail' post.id %}">
+            {{count}}) {{post.title}}
+        </a>
+    </h3>
+    <p class="date">
+        Published {{ post.publish }} by {{ post.author }}
+    </p>
+    {{ post.body|truncatewords:30|linebreaks }}
+
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Create Post{% endblock %}
+
+
+{% block content %}
+<div class="d-flex flex-column d-flex justify-content-center align-items-center p-5 w-75">
+<form method="post" class="d-flex flex-column d-flex justify-content-center align-items-center">
+    {% csrf_token %}
+    <label for="title"><strong>Title: </strong></label>
+    <input type="text" name="title" class="form-control w-75 my-3" placeholder="Enter the post title">
+
+    <label for="body"><strong>Body: </strong></label>
+    <textarea name="body" cols="60" rows="10" class="my-3"></textarea>
+
+    <label for="status">Status: </label>
+    <select name="status" class="form-control w-50">
+        <option value="PB">Published</option>
+        <option value="DF">Draft</option>
+    </select>
+    <input type="submit" value="Save" class="btn my-3">
+</form>
+<h3><a href="{% url 'blog:post_list' %}">Tab to see Published Posts.</a></h3>
+</div>
+
+{% endblock %}

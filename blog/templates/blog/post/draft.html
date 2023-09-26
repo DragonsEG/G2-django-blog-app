@@ -1,0 +1,22 @@
+{% extends "blog/base.html"%}
+
+{% block title %}My Drafts{% endblock %}
+
+{% block content %}
+
+    <h1 class="my-3">My Blog</h1>
+    <h3><a href="{% url 'blog:post_list' %}">Tab to see Published Posts.</a></h3>
+    {% for post in draft_posts %}
+        <h2 style="color: blue;"> {{post.title}} </h2>
+        <p class="date">
+            Published {{ post.publish }} by {{ post.author }}
+        </p>
+        {{ post.body|truncatewords:30|linebreaks }}
+        <form method="get">
+            <input type="hidden" value="{{post.id}}" name="user_id">
+            <input type="submit" value="PB" name="publish" class="btn w-25">
+        </form>
+        
+    {% endfor %}
+    
+{% endblock %}

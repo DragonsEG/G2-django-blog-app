@@ -1,0 +1,39 @@
+{% extends "blog/base.html" %}
+
+{% block title %} {{post.title}} {% endblock %}
+
+{% block content %}
+<h3 class="my-3"><a href="{% url 'blog:post_list' %}">Tab to see Published Posts.</a></h3>
+    <h1> {{post.title}} </h1>
+    <p class="date" >
+        Published {{ post.publish }} by {{ post.author }}
+    </p>
+
+    {{ post.body|linebreaks }}
+    <div class="d-flex flex-column">
+        <div class="mt-5">
+            <form method="get" class="form-inline" >
+                <input type="text" name="comment_field" class="form-control-lg" placeholder="Type your comment...">
+                <input type="submit" value="comment" class="btn mx-3">
+            </form>
+        </div>
+
+        <div class="mt-5">
+            {% if not comments %}
+                <h2>No comments yet.</h2>
+            {% else %}
+                <h3>Comments:</h3>
+                <hr>
+                {% for comment in comments %}
+                    <div class="mx-3 my-3 p-3" style="background-color: #efefef;">
+                        <strong>{{comment.body}}</strong>
+                        <p class="date">
+                            Created {{comment.created}}
+                        </p>
+                        <hr>
+                    </div>
+                {% endfor%}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
