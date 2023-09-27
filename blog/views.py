@@ -131,11 +131,9 @@ class changePass (PasswordChangeView) :
         if (form.is_valid()) :
             if check_password(form['old_password'].value() , request.user.password) :
                 if (form['new_password1'].value() == form['new_password2'].value()):
-                    test = User.objects.all().filter(username = request.user.username)
-                    test[0].password = form['old_password'].value() 
-                    test[0].save() 
-                    new_user = User.objects.all().filter(username = request.user.username)
-                    update_session_auth_hash(request , new_user)
+                    request.user.set_password(form['new_password1'].value())
+                    request.user.save()
+                    update_session_auth_hash(request , request.user)
                     messages.success(
                         request, "Your password changed")
                     return redirect('profile' , request.user)
