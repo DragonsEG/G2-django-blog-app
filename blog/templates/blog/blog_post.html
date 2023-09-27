@@ -1,0 +1,58 @@
+{% extends "blog/base.html" %}
+
+
+{% block title %} {{post.title}} {% endblock %}
+
+{% block content %} 
+    <div class = "row">
+        <div class = "col-md-6 col-12 mx-mx-auto mx-5 mt-5 mb-5">
+            <h1> {{post.title}} </h1>
+            <p class="date" >
+                Published {{ post.publish }} by {{ post.owner}}
+            </p>
+            {{ post.content|safe|linebreaks }}
+        </div>
+
+        <div class="col-md-6 col-12 mx-mx-auto mx-5 mt-5 mb-5">
+            <div class="mt-5">
+                
+                <form method="post" class="form-inline" >
+                    {% csrf_token %}
+                    <input type="text" name="comment_field" class="form-control-lg" placeholder="Type your comment...">
+                    <input type="hidden" name = "test" value = "blog">
+                    {% if user.is_authenticated %}
+                    <input type="submit" value="comment" class="btn mx-3" method = "post">
+                    {% endif %}
+                </form>
+            </div>
+
+            <div class="col-md-6 col-12 mx-mx-auto mx-5 mt-5 mb-5">
+                {% if not comments %}
+                    <h2>No comments yet.</h2>
+                {% else %}
+                    <h3>Comments:</h3>
+                    <hr>
+                    {% for comment in comments %}
+                        <div class="mx-3 my-3 p-3" style="background-color: #efefef;">
+                            <strong>{{comment.comment_content}}</strong>
+                            <p class="user">
+                                Created by {{comment.user}}
+                            </p>
+                            <p class="date">
+                                {{comment.publish_data}}
+                            </p>
+                            <hr>
+                        </div>
+                    {% endfor%}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md col-12 mx-5 mt-3">
+                <a class="btn btn-outline-info" href="{% url 'index' %}">Go back</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+

@@ -1,49 +1,38 @@
 from django.db import models
-from django.db.models.query import QuerySet
-from django.utils import timezone
 from django.contrib.auth.models import User
+from tinymce.models import HTMLField
 
 
-class Post(models.Model):
+class Post (models.Model):
+    title = models.CharField(max_length=255)
+    statue = models.CharField(max_length=2)
+    content = HTMLField()
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='posts_owner'
+    )
+    publish_date = models.DateTimeField(auto_now_add=True)
 
-    class Status(models.TextChoices):
-        DRAFT = 'DF' , 'Draft' 
-        PUBLISHED = 'PB', 'Published'
-
-    title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250)
-    body = models.TextField()
-    publish = models.DateTimeField(default=timezone.now)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True) 
-    status = models.CharField(max_length=2,choices=Status.choices,default=Status.DRAFT)
-    author = models.ForeignKey(User,on_delete=models.CASCADE,related_name='blog_posts')
-
-
-    objects = models.Manager()
-
-
-
-
-    class Meta:
-        ordering = ['-publish']
-        indexes = [
-            models.Index(fields=['-publish']),
-        ]
-
-
-
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title
 
 
+class Comment (models.Model):
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_comments'
+    )
+    comment_content = models.CharField(max_length=255)
+    publish_data = models.DateTimeField(auto_now_add=True)
 
-class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-    body = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.comment_content
 
-    def __str__(self) -> str:
-        return self.body
-    
 
+# Create your models here.

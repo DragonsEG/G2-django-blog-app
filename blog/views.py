@@ -1,52 +1,82 @@
-from django.shortcuts import render,get_object_or_404,redirect
-from django.utils.text import slugify
-
-from .models import Post,Comment
-
-
-def post_list(request):
-    posts = Post.objects.all().filter(status=Post.Status.PUBLISHED).order_by('-publish')
-    count = posts.count()
-    zipped = zip(range(1, count + 1), posts)
-    return render(request,'blog/post/list.html',{'zipped':zipped})
-
-
-def post_detail(request,id):
-
-    post = get_object_or_404(Post,id=id)
-    comment_field = request.GET.get('comment_field',None)
-    if comment_field != None and comment_field != ""  :
-        get_comment = request.GET['comment_field'] 
-        if get_comment is not None:
-            comments = Comment.objects.create(post=post,body=get_comment)
-
-    comments = post.comments.all().order_by('-created')
-    return render(request,'blog/post/detail.html',{'post':post,'comments':comments})
+from django.shortcuts import render, redirect
+from django.views import View
+from .forms import UserRegisterForm
+from django.http import HttpResponse
+from django.views.generic import ListView, DetailView
+from django.contrib import messages
+from .models import Post, Comment
+from django.contrib.auth.models import User,Group
+from django.shortcuts import get_object_or_404
+# Create your views here.
 
 
-def post_create(request):
-    if request.method == 'POST':
-        title = request.POST['title']
-        slug = slugify(title)
-        body = request.POST['body']
-        status = request.POST['status']
-        print(status)
-        Post.objects.create(title=title,body=body,slug=slug,status=status,author=request.user)
-        return redirect('blog:post_list')
-    
-    return render(request,'blog/post/create.html')
+class Index(ListView):
+    model = Post
+    queryset = Post.objects.all().order_by('-publish_date')
+    template_name = 'blog/index.html'
+    paginate_by = 3
 
 
-def post_draft(request):
-    drafted_posts = Post.objects.filter(status=Post.Status.DRAFT).order_by('-publish')
+class RegisterView(View):
+    def get(self, request):
+        form = UserRegisterForm()
+        return render(request, 'users/register.html', {'form': form})
 
-    
-    state = request.GET.get('publish')
+    def post(self, request):
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = get_object_or_404(User,username=form.cleaned_data['username'])
+            if form.cleaned_data['is_superuser'] == True:
+                group = get_object_or_404(Group, name="Admin-Group")
+                user.groups.add(group)
+                user.save()
+            elif form.cleaned_data['is_staff'] == True:
+                group = get_object_or_404(Group,name='Editor-Group')
+                user.groups.add(group)
+                user.save()
+            else:
+                group = get_object_or_404(Group,name='User-Group')
+                user.groups.add(group)
+                user.save()
+            messages.success(
+                request, "Your are signed up successfully")
+            return redirect('index')
+        else:
+            messages.error(
+                request, "Wrong input data please re enter it.")
+            return redirect('register')
 
-    if state != None:
-        user_id = request.GET.get('user_id')
-        post = get_object_or_404(Post,id=user_id)
-        post.status = Post.Status.PUBLISHED
-        post.save()
 
-    return render(request,'blog/post/draft.html',{'draft_posts':drafted_posts})
+class createView (View):
+    def get(self, request):
+        return render(request, 'blog/create.html')
+
+    def post(self, request):
+        user = get_object_or_404(User,id=request.user.id)
+        group_user = get_object_or_404(Group,name= "User-Group")
+
+        if not user.groups.filter(name=group_user).exists():
+            title = request.POST['title']
+            status = request.POST['status']
+            content = request.POST['content']
+            print(title, status, content)
+            Post.objects.create(title=title, statue=status,
+                                content=content, owner=request.user)
+            return redirect('index')
+        else:
+            return redirect('index')
+
+
+class DetailPostView(DetailView):
+
+    def get(self, request, pk):
+
+        comments = Comment.objects.all().filter(post_id=pk).order_by('publish_data')
+        post = Post.objects.all().filter(id=pk)
+        return render(request, 'blog/blog_post.html', {'comments': comments, 'post': post[0]})
+
+    def post(self, request, pk):
+        Comment.objects.create(
+            post_id=pk, comment_content=request.POST['comment_field'], user_id=request.user.id)
+        return redirect('detail_post',pk)

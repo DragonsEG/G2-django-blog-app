@@ -1,0 +1,24 @@
+{% extends "blog/base.html" %}
+
+{% block content  %}
+<div class="d-flex flex-column d-flex justify-content-center align-items-center p-5 ">
+    <form method="post" class="d-flex flex-column d-flex justify-content-center align-items-left">
+        {% csrf_token %}
+        <label for="title"><strong>Title: </strong></label>
+        <input type="text" name="title" class="form-control  my-3" placeholder="Enter the post title">
+    
+        <label for="content"><strong>content: </strong></label>
+        <textarea name="content" cols="80" rows="10" class="my-3"></textarea>
+    
+        <label for="status">Status: </label>
+        <select name="status" class="btn btn-secondary dropdown-toggle px-3 py-2">
+            <option value="PB">Published </option>
+            <option value="DF">Draft</option>
+        </select>
+        <input type="submit" value="Save" class="btn btn-info my-3 px-4">
+    </form>
+    <h4><a href="{ url 'index' }">Tab to see Published Posts</a></h4>
+    </div>
+    
+
+{% endblock content %}
