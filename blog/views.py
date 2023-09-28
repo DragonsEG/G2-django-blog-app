@@ -92,7 +92,6 @@ class createView (View):
             title = request.POST['title']
             status = request.POST['status']
             content = request.POST['content']
-            print(title, status, content)
             Post.objects.create(title=title, statue=status,
                                 content=content, owner=request.user)
             return redirect('index')
@@ -115,7 +114,6 @@ class DetailPostView(DetailView):
     
 def deleteAccount (request , user) :
     if request.method == 'GET' :
-        print(user)
         logout(request)
         get_object_or_404(User , username = user).delete() 
         return redirect('index')
@@ -146,14 +144,16 @@ class changePass (PasswordChangeView) :
                 request, "Wrong input data")
                 return redirect('changepassword')
         else :
-            messages.error(
+         messages.error(
                 request, "Wrong input data")
-            return redirect('changepassword')
+        return redirect('changepassword')
 class deletePost (View) :
     pass
 
 class editPost (View) :
     pass
+
+
 class profileView (View) :
     def get (self , request , user) :
         posts = Post.objects.all().filter(owner_id = request.user.id)

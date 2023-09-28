@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import pytz
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+
+TIME_ZONE = 'Africa/Cairo'
+USE_TZ = True
+LOCAL_TIME_ZONE = pytz.timezone(TIME_ZONE)
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'Etc/GMT-3'
+
+USE_I18N = True
+
+USE_TZ = True
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
