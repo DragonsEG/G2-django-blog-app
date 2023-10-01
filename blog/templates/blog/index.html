@@ -11,6 +11,9 @@
             <div class="col-md-2 col-12 mx-md-auto mx-3 mt-5 mb-5 ">
                 <a href="{% url 'Create' %}" class="btn btn-outline-secondary"><i class='bx bx-plus'></i> Create a new post</a>
             </div>
+            <div class="col-md-2 col-12 mx-md-auto mx-3 mt-5 mb-5 ">
+                <a href="{% url 'draft_posts' %}" class="btn btn-success"><i class='bx bx-plus'></i> Show your Draftes</a>
+            </div>
         {% endif %}
         {% endif %}
         {% endfor %}
@@ -20,6 +23,9 @@
                     <div class="card-body align-items-center mx-3">
                         <h3 class="card-title fw-bold">{{ obj.title }}</h3>
                         <p class="card-text text-muted">Published: {{ obj.publish_date }}</p>
+                        <p class="card-text text-muted">Category: 
+                            {{obj.categories}}
+                        </p>
                         <p class="card-text text-muted">Author: {{ obj.owner.username }}</p>
                         <p class="card-text">{{ obj.content|truncatechars_html:200|safe }}</p>
                         <a href="{% url 'detail_post' obj.id %}" class="btn btn-info">Read more</a>

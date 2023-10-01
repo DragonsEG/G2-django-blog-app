@@ -5,8 +5,19 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 
 class Post (models.Model):
+
+    class Status(models.TextChoices):
+        DRAFT = 'DF' , 'Draft' 
+        PUBLISHED = 'PB', 'Published'
+
+    class Category(models.TextChoices):
+        NEWS = 'News','News'
+        TUTORIAL = 'Tutorial','Tutorial'
+        BUSINESS = 'Business','Business'
+
     title = models.CharField(max_length=255)
-    statue = models.CharField(max_length=2)
+    statue = models.CharField(max_length=2,choices=Status.choices,default=Status.DRAFT)
+    categories = models.CharField(max_length=10,choices=Category.choices,default=Category.BUSINESS)
     content = HTMLField()
     owner = models.ForeignKey(
         User,
@@ -17,6 +28,7 @@ class Post (models.Model):
 
     def __str__(self):
         return self.title
+    
 
 
 class Comment (models.Model):

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.views import View
 from .forms import UserRegisterForm
 from .forms import UserLoginForm, ChangeForm, EditUserProfileForm
@@ -9,7 +9,6 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib import messages
 from .models import Post, Comment
 from django.contrib.auth.models import User, Group
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import update_session_auth_hash
 from django.views import generic
@@ -19,7 +18,14 @@ from django.urls import reverse_lazy
 
 class Index(ListView):
     model = Post
-    queryset = Post.objects.all().order_by('-publish_date')
+    queryset = Post.objects.filter(statue= Post.Status.PUBLISHED).order_by('-publish_date')
+    template_name = 'blog/index.html'
+    paginate_by = 3
+
+
+class ViewDraftPosts(ListView):
+    model = Post
+    queryset = Post.objects.filter(statue= Post.Status.DRAFT).order_by('-publish_date')
     template_name = 'blog/index.html'
     paginate_by = 3
 
@@ -70,20 +76,20 @@ class loginView (View):
     def post(self, request):
         print(request.user)
         form = UserLoginForm(request.POST)
+
         if form.is_valid():
-            if (User.objects.all().filter(username=form['username'].value()).exists()):
-                if check_password(form['password'].value(), User.objects.all().filter(username=form['username'].value())[0].password):
-                    user = authenticate(
-                        request, username=f"{form['username'].value()}", password=f"{form['password'].value()}")
-                    login(request, user)
-                    return redirect('profile', form['username'].value())
-                else:
-                    messages.error(
-                        request, "Wrong password.")
-                    return redirect('login')
+            username = f"{form.cleaned_data['username']}"
+            password = f"{form.cleaned_data['password']}"
+            print(username)
+            print(password)
+            user = authenticate(request, username=username, password=password)
+            print(user)
+            if user:
+                login(request, user)
+                return redirect('profile', form['username'].value())
             else:
                 messages.error(
-                    request, "Not exist.")
+                    request, 'Invalid username or password.')
                 return redirect('login')
         else:
             messages.error(
@@ -103,7 +109,8 @@ class createView (View):
             title = request.POST['title']
             status = request.POST['status']
             content = request.POST['content']
-            Post.objects.create(title=title, statue=status,
+            category = request.POST['categories']
+            Post.objects.create(title=title, statue=status,categories=category,
                                 content=content, owner=request.user)
             return redirect('index')
         else:
@@ -113,10 +120,9 @@ class createView (View):
 class DetailPostView(DetailView):
 
     def get(self, request, pk):
-
-        comments = Comment.objects.all().filter(post_id=pk).order_by('publish_data')
-        post = Post.objects.all().filter(id=pk)
-        return render(request, 'blog/blog_post.html', {'comments': comments, 'post': post[0]})
+        post = get_object_or_404(Post, id=pk)
+        comments = Comment.objects.filter(post=post).order_by('-publish_data')
+        return render(request, 'blog/blog_post.html', {'comments': comments, 'post': post})
 
     def post(self, request, pk):
         Comment.objects.create(
@@ -141,18 +147,14 @@ class changePass (PasswordChangeView):
     def post(self, request):
         form = ChangeForm(request.POST)
         if (form.is_valid()):
-            if check_password(form['old_password'].value(), request.user.password):
-                if (form['new_password1'].value() == form['new_password2'].value()):
-                    request.user.set_password(form['new_password1'].value())
-                    request.user.save()
-                    update_session_auth_hash(request, request.user)
-                    messages.success(
-                        request, "Your password changed")
-                    return redirect('profile', request.user)
-                else:
-                    messages.error(
-                        request, "Wrong input data")
-                    return redirect('changepassword')
+            if check_password(form['old_password'].value(), request.user.password) and (form['new_password1'].value() == form['new_password2'].value()):
+
+                request.user.set_password(form['new_password1'].value())
+                request.user.save()
+                update_session_auth_hash(request, request.user)
+                messages.success(
+                    request, "Your password changed")
+                return redirect('profile', request.user)
             else:
                 messages.error(
                     request, "Wrong input data")
@@ -165,7 +167,7 @@ class changePass (PasswordChangeView):
 
 class profileView (View):
     def get(self, request, user):
-        posts = Post.objects.all().filter(owner_id=request.user.id)
+        posts = Post.objects.filter(owner_id=request.user.id)
         return render(request, 'users/profile.html', {'user': request.user, 'posts': posts})
 
 
@@ -179,8 +181,10 @@ class PostEditView(View):
         title = request.POST['title']
         status = request.POST['status']
         content = request.POST['content']
+        category = request.POST['categories']
         post.title = title
-        post.status = status
+        post.statue = status
+        post.categories = category
         post.content = content
         post.save()
         return redirect('index')

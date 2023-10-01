@@ -15,9 +15,12 @@
         <div class="col-md-6 mx-auto mt-5 mb-5" style="word-wrap: break-word;">
             <h1>{{ post.title }}</h1>
             <p class="date">
-                Published {{ post.publish }} by {{ post.owner }}
+                Published: {{ post.publish }} by {{ post.owner }}
             </p>
-            {{ post.content|linebreaks }}
+            <p class="date">
+                Category: {{ post.categories }}
+            </p>
+            Content: {{ post.content|linebreaks }}
         </div>
         
     </div>
