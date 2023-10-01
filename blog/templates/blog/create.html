@@ -15,9 +15,12 @@
             <option value="PB">Published </option>
             <option value="DF">Draft</option>
         </select>
-        <input type="submit" value="Save" class="btn btn-info my-3 px-4">
+        <button type="submit" class="btn btn-info my-3 px-4">
+            <i class="bx bx-save"></i> Save
+        </button>
+          
     </form>
-    <h4><a href="{ url 'index' }">Tab to see Published Posts</a></h4>
+    <h4><a class="btn btn-outline-primary" href="{% url 'index' %}">Tab to see Published Posts</a></h4>
     </div>
     
 

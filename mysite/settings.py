@@ -29,18 +29,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-
-TIME_ZONE = 'Africa/Cairo'
-USE_TZ = True
-LOCAL_TIME_ZONE = pytz.timezone(TIME_ZONE)
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'Etc/GMT-3'
-
-USE_I18N = True
-
-USE_TZ = True
-
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
@@ -126,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/cairo'
 
 USE_I18N = True
 

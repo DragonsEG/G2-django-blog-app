@@ -1,0 +1,24 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="d-flex flex-column justify-content-center align-items-center p-5">
+    <form method="post" class="d-flex flex-column justify-content-center align-items-left">
+        {% csrf_token %}
+        <label for="title"><strong>Title: </strong></label>
+        <input type="text" name="title" class="form-control my-3" placeholder="Enter the post title" value="{{ post.title }}">
+    
+        <label for="content"><strong>Content: </strong></label>
+        <textarea name="content" cols="80" rows="10" class="my-3">{{ post.content }}</textarea>
+    
+        <label for="status">Status: </label>
+        <select name="status" class="btn btn-secondary dropdown-toggle px-3 py-2">
+            <option value="PB" {% if post.status == "PB" %}selected{% endif %}>Published</option>
+            <option value="DF" {% if post.status == "DF" %}selected{% endif %}>Draft</option>
+        </select>
+        <button type="submit" class="btn btn-info my-3 px-4">
+            <i class='bx bxs-edit'></i> update
+        </button>
+    </form>
+    <h4><a class="btn btn-outline-primary" href="{% url 'index' %}">Back to Published Posts</a></h4>
+</div>
+{% endblock content %}

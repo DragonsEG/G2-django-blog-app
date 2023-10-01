@@ -1,62 +1,64 @@
 {% extends "blog/base.html" %}
 
-{% block content  %}
-    
-    {% for message in messages %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>{{ message.tags }} {{ message }}</strong> .
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="del()" id = "del">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>     
-    {% endfor %}
+{% block content %}
     <div class="row">
         <div class="col-md-6 col-12 mx-md-auto mx-3 mt-5 mb-5">
             <h1 class="fw-bolder">Blogs</h1>
         </div>
-            {% if user.is_authenticated %}
-            <div class="col-md-2 col-12 mx-md-auto mx-3 mt-5 mb-5">
-                <a href="{% url 'Create' %}" class="btn btn-dark">Create a new post</a>
+        {% for g in user.groups.all%}
+        {% if g.name != 'User-Group' %}
+        {% if user.is_authenticated %}
+            <div class="col-md-2 col-12 mx-md-auto mx-3 mt-5 mb-5 ">
+                <a href="{% url 'Create' %}" class="btn btn-outline-secondary"><i class='bx bx-plus'></i> Create a new post</a>
             </div>
-            {% endif %}
-        {% for obj in object_list %}
-        <div class = "row">
-            <div class = "col-md-6 col-12 mx-mx-auto mx-5 mt-5 mb-5">
-                <h3 class = "fw-bold">{{ obj.title }}</h3>
-                <p class = "text-muted">{{obj.publish_date}}</p>
-                <p class = "text-muted">{{obj.owner.username}}</p>
-                <div class = "my-3">
-                    {{ obj.content|truncatechars_html:50|safe}}
-                </div>
-
-                <a href = "{% url 'detail_post' obj.id%}" style="color : red">Read more</a>
-            </div>
-        </div>
+        {% endif %}
+        {% endif %}
         {% endfor %}
-        <nav>
-            <ul class = "pagination">
-                <div class = "mx-auto d-flex flex-row mt-5">
-                    <li class = "page-item">
-                        <a class = "page-link" href = "#">Page 
-                            {{ page_obj.number}} of {{page_obj.paginator.num_pages}}</a>
-                    </li>
-                    {% if page_obj.has_previous %}
-                        <li class = "page-item">
-                            <a class = "page-link" href="?page=1">&laquo; First</a>
-                        </li>
-                    {% endif%}
-
-                    {% if page_obj.has_next%} 
-                    <li class = "page-item">
-                        <a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a>
-                    </li>
-                    <li class = "page-item">
-                        <a class = "page-link" href="?page={{ page_obj.paginator.num_pages}}">Last</a>
-                    </li>
-                    {% endif %}
+        {% for obj in object_list %}
+            <div class="col-md-8 col-12 mx-5 mb-3  ">
+                <div class="card mx-5">
+                    <div class="card-body align-items-center mx-3">
+                        <h3 class="card-title fw-bold">{{ obj.title }}</h3>
+                        <p class="card-text text-muted">Published: {{ obj.publish_date }}</p>
+                        <p class="card-text text-muted">Author: {{ obj.owner.username }}</p>
+                        <p class="card-text">{{ obj.content|truncatechars_html:200|safe }}</p>
+                        <a href="{% url 'detail_post' obj.id %}" class="btn btn-info">Read more</a>
+                    </div>
                 </div>
-            </ul>
-        </nav>
+            </div>
+        {% endfor %}
+        <div class="footer py-12" style="margin-top:auto ;" >
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                        </a>
+                    </li>
+        
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">
+                                <i class="bx bx-chevron-double-left"></i> First
+                            </a>
+                        </li>
+                    {% endif %}
+        
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                Next <i class="bx bx-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                Last <i class='bx bx-last-page'></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
     </div>
-    
+   
 {% endblock content %}
