@@ -1,16 +1,8 @@
 {% extends "blog/base.html" %}
 
 {% block content  %}
-{% for message in messages %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>{{ message.tags }} {{ message }}</strong> .
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="del()" id = "del">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>     
-{% endfor %}
-<div class="card border-success mb-3">
-    <div class="card-header bg-transparent border-success fs-4" >{{user.username}}'s profile</div>
+<div class="card border-dark mb-3 mx-5 mt-4 ">
+    <div class="card-header bg-transparent border-dark fs-4" >{{user.username}}'s profile</div>
     <div class="card-body ">
         <!-- check username-->
         {% if user.username%}
@@ -25,7 +17,7 @@
             <p class="card-text">First Name : {{user.first_name}} </p>
         {% else%}
             <div class="alert alert-warning" role="alert">
-                <b>Firt name</b> is not provided by user.
+                <b>First name</b> is not provided by user.
             </div>
         {% endif %}
         <!-- check last name-->
@@ -46,35 +38,35 @@
         {% endif %}
       
     </div>
-    <div class="card-footer bg-transparent border-success">
-        <a class="btn btn-sm btn-info" href="#">Edit Account</a>
-        <a class="btn btn-sm btn-primary" href="{% url 'changepassword' %}">change password</a>
-        <a class="btn btn-sm btn-danger" href="{% url 'deleteAccount' user=user.username %}">Delete Account</a>
+    <div class="card-footer bg-transparent border-dark">
+        <a class="btn btn-md btn-info ml-4" href="{% url 'edit_profile'%}">Edit Account</a>
+        <a class="btn btn-md btn-primary ml-4" href="{% url 'changepassword' %}">change password</a>
+        <a class="btn btn-md btn-danger ml-4" href="{% url 'deleteAccount' user=user.username %}">Delete Account</a>
     </div>
   </div>
 
   <hr>
-  <h3>My Posts</h3>
+  <h3 class="mx-5">My Posts</h3>
     {% for post_data in posts %}
-        <div class="card">
-            <div class="card-body">
-            <blockquote class="blockquote mb-0">
+        <div class="card mx-5 mb-3">
+            <div class="card-body mx-4">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>{{post_data.name}}</p>
+                        <p>{{post_data.title}}</p>
                     </div>
                     <div class="col-md-6">
                         <p class="text-end">{{post_data.publish_date}}</p>
                     </div>
                 </div>
             
-                <footer class="blockquote-footer">{{post_data.content | truncatechars_html:20}}</footer>
+                <footer class="blockquote-footer">{{post_data.content | truncatechars_html:20 |
+                    save}}</footer>
             </blockquote>
             </div>
             <div class="card-footer">
-                <a class="btn btn-sm btn-info" href="#">Read More</a>
-                <a class="btn btn-sm btn-primary" href="#">Edit</a>
-                <a class="btn btn-sm btn-danger" href="#">Delete</a>
+                <a class="btn btn-md btn-info ml-4" href="{% url 'detail_post' post_data.id%}">Read More</a>
+                <a class="btn btn-md btn-primary ml-4" href="{% url 'edit_post' post_data.id%}">Edit Post</a>
+                <a class="btn btn-md btn-danger ml-4" href="{% url 'delete_post' post_data.id%}">Delete Post</a>
 
             </div>
         </div>
