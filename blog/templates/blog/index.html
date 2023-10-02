@@ -1,34 +1,69 @@
 {% extends "blog/base.html" %}
-
+{% load new_filters %}
 {% block content %}
     <div class="row">
         <div class="col-md-6 col-12 mx-md-auto mx-3 mt-5 mb-5">
             <h1 class="fw-bolder">Blogs</h1>
         </div>
-        {% for g in user.groups.all%}
-        {% if g.name != 'User-Group' %}
-        {% if user.is_authenticated %}
+        <!--edit this important-->
+        {% if not  request.user|is_viewer %} 
             <div class="col-md-2 col-12 mx-md-auto mx-3 mt-5 mb-5 ">
                 <a href="{% url 'Create' %}" class="btn btn-outline-secondary"><i class='bx bx-plus'></i> Create a new post</a>
             </div>
             <div class="col-md-2 col-12 mx-md-auto mx-3 mt-5 mb-5 ">
-                <a href="{% url 'draft_posts' %}" class="btn btn-success"><i class='bx bx-plus'></i> Show your Draftes</a>
+                <a href="{% url 'draft_posts' %}" class="btn btn-success"><i class='bx bx-plus'></i> Show your Drafts</a>
+                </div>
+        {% endif %}
+
+        <form method = "post" >
+            {% csrf_token %}
+            <div class="col-md-3  mx-5 mt-5 mb-5 ml-auto">
+                <p> Choose what you want to see </p>
+                <div class="form-check">
+                    {% if categories|category:'Tutorial'%}
+                    <input class="form-check-input" type="checkbox" name = "Tutorial" checked>
+                    {% else %}
+                    <input class="form-check-input" type="checkbox" name = "Tutorial">
+                    {% endif %}
+                    <label class="form-check-label" for="defaultCheck1">
+                        Tutorial
+                    </label>
+                </div>
+                <div class="form-check">
+                    {% if categories|category:'Business'%}
+                    <input class="form-check-input" type="checkbox" name = "Business" checked>
+                    {% else %}
+                    <input class="form-check-input" type="checkbox" name = "Business">
+                    {% endif %}
+                    <label class="form-check-label" for="defaultCheck1">
+                        Business
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    {% if categories|category:'News'%}
+                    <input class="form-check-input" type="checkbox" name = "News" checked>
+                    {% else %}
+                    <input class="form-check-input" type="checkbox" name = "News">
+                    {% endif %}
+                    <label class="form-check-label" for="defaultCheck1">
+                        News
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
-        {% endif %}
-        {% endif %}
-        {% endfor %}
-        {% for obj in object_list %}
+        </form>
+        {% for post in page %}
             <div class="col-md-8 col-12 mx-5 mb-3  ">
                 <div class="card mx-5">
                     <div class="card-body align-items-center mx-3">
-                        <h3 class="card-title fw-bold">{{ obj.title }}</h3>
-                        <p class="card-text text-muted">Published: {{ obj.publish_date }}</p>
+                        <h3 class="card-title fw-bold">{{ post.title }}</h3>
+                        <p class="card-text text-muted">Published: {{ post.publish_date }}</p>
                         <p class="card-text text-muted">Category: 
-                            {{obj.categories}}
+                            {{post.categories}}
                         </p>
-                        <p class="card-text text-muted">Author: {{ obj.owner.username }}</p>
-                        <p class="card-text">{{ obj.content|truncatechars_html:200|safe }}</p>
-                        <a href="{% url 'detail_post' obj.id %}" class="btn btn-info">Read more</a>
+                        <p class="card-text text-muted">Author: {{ post.owner.username }}</p>
+                        <p class="card-text">{{ post.content|truncatechars_html:200|safe }}</p>
+                        <a href="{% url 'detail_post' post.id %}" class="btn btn-info">Read more</a>
                     </div>
                 </div>
             </div>
@@ -38,11 +73,11 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
                         <a class="page-link" href="#">
-                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            Page {{ page.number }} of {{ page.paginator.num_pages }}
                         </a>
                     </li>
         
-                    {% if page_obj.has_previous %}
+                    {% if page.has_previous %}
                         <li class="page-item">
                             <a class="page-link" href="?page=1">
                                 <i class="bx bx-chevron-double-left"></i> First
@@ -50,14 +85,14 @@
                         </li>
                     {% endif %}
         
-                    {% if page_obj.has_next %}
+                    {% if page.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                            <a class="page-link" href="?page={{ page.next_page_number }}">
                                 Next <i class="bx bx-chevron-right"></i>
                             </a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                            <a class="page-link" href="?page={{ page.paginator.num_pages }}">
                                 Last <i class='bx bx-last-page'></i>
                             </a>
                         </li>
@@ -66,5 +101,4 @@
             </nav>
         </div>
     </div>
-   
 {% endblock content %}

@@ -1,5 +1,5 @@
 {% extends "blog/base.html" %}
-
+{% load new_filters%}
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
@@ -30,11 +30,10 @@
                 {% csrf_token %}
                 <input type="text" name="comment_field" class="form-control-lg" placeholder="Type your comment...">
                 <input type="hidden" name="test" value="blog">
-                {% for g in user.groups.all%}
-                    {% if g.name != 'User-Group' %}
-                    <input type="submit" value="Comment" class="btn mx-3">
-                    {% endif %}
-                {% endfor %}
+                <!--edit this -->
+                {% if not user|is_viewer%}
+                <input type="submit" value="Comment" class="btn mx-3">
+                {% endif %}
             </form>
         </div>
         <div class="mt-5">

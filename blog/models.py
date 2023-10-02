@@ -16,8 +16,8 @@ class Post (models.Model):
         BUSINESS = 'Business','Business'
 
     title = models.CharField(max_length=255)
-    statue = models.CharField(max_length=2,choices=Status.choices,default=Status.DRAFT)
-    categories = models.CharField(max_length=10,choices=Category.choices,default=Category.BUSINESS)
+    statue = models.CharField(max_length=2,choices=Status.choices)
+    categories = models.CharField(max_length=10,choices=Category.choices)
     content = HTMLField()
     owner = models.ForeignKey(
         User,
@@ -47,5 +47,18 @@ class Comment (models.Model):
     def __str__(self):
         return self.comment_content
 
+class company (models.Model) :
+    name = models.CharField(max_length=255) 
+    mail = models.EmailField()
+
+class CompanyWriters (models.Model) :
+    company = models.ForeignKey(
+        company , 
+        on_delete= models.CASCADE 
+    )
+    Writer = models.ForeignKey(
+        User , 
+        on_delete=models.CASCADE 
+    )
 
 # Create your models here.
