@@ -1,40 +1,60 @@
-# Blog_App_G2_Team
-Version-1 of Blog App with Auth and Permissions.
-Title: Simple Blog Application with Django
+# blog-application v2
+Technical Documentation for a Django Blog Application
 
-Introduction:
-The following document outlines the design and features of a simple blog application built using Django. The application allows users to create and publish blog posts, view and comment on existing posts, and provides different authentication levels for users: viewer, writer, and admin.
+Introduction
+This technical documentation outlines the architecture, features, and authentication levels for a blog application built using the Django web framework. The blog application includes the following features :
 
-1. Application Overview:
-The blog application is designed to provide a platform where users can share their thoughts and engage with other users through blog posts and comments. The core features of the application include post creation, publishing, viewing, and commenting.
+1.Users can create and publish blog posts
+2. Users can view and comment on blog posts
+3.Blog posts are sorted by publication date, with the most recent posts appearing first.
+4.Users can create and manage categories for their blog posts.
+5.Users can draft blog posts before publishing them
+6.Users can edit and delete their blog posts
 
-2. User Authentication Levels:
-The application supports three authentication levels:
+Additionally, the application implements various authentication levels, including viewer, writer, admin, a company with one or more than one writer, and signed user.
 
-a) Viewer: Viewers have the ability to browse and read blog posts. They can view published posts, comments. However, they cannot create or publish their own posts or comments.
+Architecture
+Technology Stack :
+- Python	
+- Django Framework	
+- SQLite (for data storage)	
+- HTML/Bootstrap for front-end	
+- JavaScript	
+- Django's built-in authentication system
 
-b) Writer: Writers have all the privileges of viewers and can additionally create, edit, and publish their own blog posts. They can also delete their own posts .
+Features
+User Authentication Levels
 
-c) Admin: Admin users have all the privileges of writers and can additionally manage all blog posts and comments on the site. They have the authority to delete or modify any post or comment, regardless of the user who created it.
+Viewer: Users with this level can view published blog posts and comments but cannot create or edit posts. They can also sign up for an account
 
-3. Blog Post Functionality:
-The application provides the following features related to blog posts:
+Writer: Writers can create, edit, and delete their own blog posts. They can also view and comment on other posts
 
-a) Create and Publish Posts: Writers and admins can create new blog posts using a user-friendly interface. They can add a title, content the post. Once created, they can publish the post, making it visible to viewers.
+Admin: Admin users have full control over the blog application. They can manage user accounts, categories, and all blog posts. They can also moderate comments
 
-b) View Posts: Viewers, writers, and admins can browse and read published blog posts. Posts are displayed in a sorted order based on their publication date, with the most recent posts appearing first. Each post includes the title, content, author, publication date.
+Company with Writers: This level is designed for organizations or companies. It allows a company to have one or more writers under their account. Writers within a company can create, edit, and delete blog posts, but the company admin can oversee and manage all blog content created by writers in the company.
 
-c) Edit and Delete Posts: Writers and admins have the ability to edit or delete their own posts. This functionality allows them to update the content, modify tags, or remove posts that are no longer relevant.
-
-4. Comment Functionality:
-The application provides the following features related to comments:
-
-a) Comment on Posts: Viewers, writers, and admins can leave comments on published blog posts to share their thoughts or engage in discussions. Comments are displayed below the respective blog post and include the commenter's name, date, and content.
+Signed User: A signed user is a registered user who has a profile but doesn't have any specific role. view and comment on others' posts
 
 
+Blog Features
+Create and Publish Blog Posts: Writers and company writers can create new blog posts and publish them. They can set a publication date and time for scheduling posts.
 
-5. Security and Permissions:
-To ensure security and prevent unauthorized access, the application implements appropriate authentication and authorization mechanisms. User authentication is required to access the blog application, and different levels of access are granted based on the user's role.
+View and Comment on Blog Posts: Users can view published blog posts and leave comments on them. Comments can be moderated by admins.
 
-Conclusion:
-The simple blog application developed using Django provides a user-friendly platform for creating, publishing, and interacting with blog posts. It supports different authentication levels, allowing users to have varying levels of access and privileges. By incorporating features such as post creation, publication, viewing, commenting, and appropriate security measures, the application aims to enhance the user experience and encourage engagement within the blogging community.
+Sort Posts by Publication Date: Blog posts are sorted by publication date in descending order, displaying the most recent posts first.
+
+Create and Manage Categories: Writers and company writers can create and assign categories to their blog posts. Categories help organize and filter posts.
+
+Draft Blog Posts: Users can save blog posts as drafts before publishing them. This feature allows writers to work on posts over time.
+
+Edit and Delete Blog Posts: Users can edit their own blog posts and delete them if needed.
+
+
+
+Authentication and Authorization
+
+The authentication and authorization system is integrated with Django's built-in authentication framework. Users can register, log in, and log out. Access to specific features is controlled based on the user's authentication level.
+
+
+Conclusion
+This technical documentation outlines the key features and architecture of the Django blog application. The application is designed to provide a robust and flexible platform for users to create, manage, and interact with blog posts, while differentiating user capabilities through various authentication levels.
