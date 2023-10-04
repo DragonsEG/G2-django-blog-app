@@ -1,7 +1,9 @@
 from typing import Any
 from django import forms
-from django.contrib.auth.models import User , Group
-from django.contrib.auth.forms import UserCreationForm , UserChangeForm
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, BaseUserCreationForm
+from django.contrib.auth import password_validation
+from .models import *
 
 
 class unUniqueCharField (forms.CharField):
@@ -17,14 +19,17 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first', 'last', 'username',  'email', 'password1',
-                'password2', 'is_staff', 'is_superuser']
+                  'password2', 'is_superuser']
 
-class CompanyRegistration (UserCreationForm) :
-    Company_Name = forms.CharField(max_length=255) 
-    Company_Mail = forms.EmailField() 
-    class  Meta :
-        model = Group
-        fields = ['Company_Name' , 'Company_Mail' , 'password1' , 'password2']
+
+class CompanyRegistration (UserCreationForm):
+    email = forms.EmailField(label='Company Mail')
+    username = forms.CharField(widget=forms.TextInput(),  label='Company Name')
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=100)
@@ -50,4 +55,3 @@ class EditUserProfileForm(UserChangeForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
-

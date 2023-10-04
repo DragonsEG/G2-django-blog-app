@@ -14,9 +14,22 @@
                 </li>
             {% endif %}
             {% if request.user.is_authenticated %}
+            {% if user|is_company%}
                 <li class="nav-item">
                     {% if user.is_authenticated %}
-                    <a class="nav-link" aria-current="page" href="{% url 'profile'  %}"><i class='bx bxs-user'></i> {{user.username}}</a>
+                    <a class="nav-link" aria-current="page" href="#"><i class='bx bx-spreadsheet'></i> requests to join</a>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <a class="nav-link" aria-current="page" href="#"><i class='bx bx-spreadsheet'></i> join to commpany</a>
+                    {% endif %}
+                </li>
+            {% endif %}
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <a class="nav-link" aria-current="page" href="{% url 'profile'  user=user.username  %}"><i class='bx bxs-user'></i> {{user.username}}</a>
                     {% endif %}
                 </li>
                 <li class="nav-item"> 
@@ -27,7 +40,7 @@
                     <a class="nav-link" href="{% url 'login' %}">Login</a>
                 </li>
                 <li class="nav-item"> 
-                    <a class="nav-link" href="{% url 'register' %}">Sign up</a>
+                    <a class="nav-link" href="{% url 'register' %}?status=user">Sign up</a>
                 </li>
             {% endif %}
         </ul>

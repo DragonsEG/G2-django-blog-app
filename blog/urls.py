@@ -10,7 +10,7 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('create/', views.createView.as_view(), name="Create"),
     path('blog/<int:pk>/', views.DetailPostView.as_view(), name='detail_post'),
-    path('profile/', views.profileView.as_view(), name='profile'),
+    path('profile/<str:user>/', views.profileView.as_view(), name='profile'),
     path('delAccount/<str:user>', views.deleteAccount, name="deleteAccount"),
     path('changepassword', views.changePass.as_view(), name='changepassword'),
     path('edit/<int:pk>', views.PostEditView.as_view(), name='edit_post'),
@@ -18,5 +18,5 @@ urlpatterns = [
     path('editprofile/', views.EditUserProfileView.as_view(), name='edit_profile'),
     path('admin/', views.admin, name='admin'),
     path('like/', views.like.as_view(), name='like'),
-    path('draft/', views.DraftPosts.as_view(),name='draft_posts')
+    path('addCategory', views.addCategory, name="add_category")
 ]

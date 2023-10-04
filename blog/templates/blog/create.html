@@ -18,9 +18,9 @@
 
         <label for="categories">Categories: </label>
         <select name="categories" class="btn btn-secondary dropdown-toggle px-3 py-2">
-            <option value="News">News</option>
-            <option value="Tutorial">Tutorial</option>
-            <option value="Business">Business</option>
+            {% for category in categories %}
+                <option value="{{category.name}}">{{category.name}}</option>
+            {% endfor %}
         </select>
 
         <button type="submit" class="btn btn-info my-3 px-4">
