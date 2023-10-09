@@ -1,75 +1,183 @@
 {% extends "blog/base.html" %}
+{% load new_filters %}
 
 {% block content  %}
-<div class="card border-dark mb-3 mx-5 mt-4 ">
-    <div class="card-header bg-transparent border-dark fs-4" >{{user.username}}'s profile</div>
-    <div class="card-body ">
-        <!-- check username-->
-        {% if user.username%}
-            <p class="card-text">User_name : {{user.username}} </p>
-        {% else%}
-            <div class="alert alert-warning" role="alert">
-                <b>username</b> is not provided by user.
-            </div>
+<div class="container">  
+    <div class="card border-dark mb-3 mx-5 mt-4 ">
+    <div class="card-header bg-transparent border-dark fs-4" >{{user.username}}'s profile
+        {% if user|is_company %}
+        <div class="float-right">
+            <a class="btn btn-md btn-info" href="#">Request</a>
+        </div>
         {% endif %}
-        <!-- check first name-->
-        {% if user.first_name%}
-            <p class="card-text">First Name : {{user.first_name}} </p>
-        {% else%}
-            <div class="alert alert-warning" role="alert">
-                <b>First name</b> is not provided by user.
-            </div>
-        {% endif %}
-        <!-- check last name-->
-        {% if user.last_name%}
-            <p class="card-text">Last Name : {{user.last_name}} </p>
-        {% else%}
-            <div class="alert alert-warning" role="alert">
-                <b>Last Name</b> is not provided by user.
-            </div>
-        {% endif %}
-        <!-- check email-->
-        {% if user.email%}
-            <p class="card-text">Email : {{user.email}} </p>
-        {% else%}
-            <div class="alert alert-warning" role="alert">
-                <b>Email</b> is not provided by user.
-            </div>
-        {% endif %}
-      
     </div>
-    <div class="card-footer bg-transparent border-dark">
-        <a class="btn btn-md btn-info ml-4" href="{% url 'edit_profile'%}">Edit Account</a>
-        <a class="btn btn-md btn-primary ml-4" href="{% url 'changepassword' %}">change password</a>
-        <a class="btn btn-md btn-danger ml-4" href="{% url 'deleteAccount' user=user.username %}">Delete Account</a>
-    </div>
-  </div>
 
-  <hr>
-  <h3 class="mx-5">My Posts</h3>
-    {% for post_data in posts %}
-        <div class="card mx-5 mb-3">
-            <div class="card-body mx-4">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>{{post_data.title}}</p>
+        <div class="card-body ">
+            <!-- check username-->
+            {% if user|is_company %}
+                {% if user.username%}
+                    <p class="card-text">company_name : {{user.username}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>company name</b> is not provided by company.
                     </div>
-                    <div class="col-md-6">
-                        <p class="text-end">{{post_data.publish_date}}</p>
+                {% endif %}
+                    <!-- check email-->
+                {% if user.email%}
+                <p class="card-text">Email : {{user.email}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>Email</b> is not provided by company.
                     </div>
-                </div>
+                {% endif %}
+            {% else %}
+                {% if user.username%}
+                    <p class="card-text">User_name : {{user.username}} </p>
+                    {% else%}
+                        <div class="alert alert-warning" role="alert">
+                            <b>username</b> is not provided by user.
+                        </div>
+                {% endif %}
+                 <!-- check first name-->
+                {% if user.first_name%}
+                    <p class="card-text">First Name : {{user.first_name}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>First name</b> is not provided by user.
+                    </div>
+                {% endif %}
+                <!-- check last name-->
+                {% if user.last_name%}
+                    <p class="card-text">Last Name : {{user.last_name}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>Last Name</b> is not provided by user.
+                    </div>
+                {% endif %}
+                 <!-- check email-->
+                {% if user.email%}
+                    <p class="card-text">Email : {{user.email}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>Email</b> is not provided by user.
+                    </div>
+                {% endif %}
+            {% endif %}
             
-                <footer class="blockquote-footer">{{post_data.content |truncatechars_html:20}}</footer>
-            </blockquote>
-            </div>
-            <div class="card-footer">
-                <a class="btn btn-md btn-info ml-4" href="{% url 'detail_post' post_data.id%}">Read More</a>
-                <a class="btn btn-md btn-primary ml-4" href="{% url 'edit_post' post_data.id%}">Edit Post</a>
-                <a class="btn btn-md btn-danger ml-4" href="{% url 'delete_post' post_data.id%}">Delete Post</a>
+        </div>
+        <div class="card-footer bg-transparent border-dark">
+            <a class="btn btn-md btn-info ml-4" href="{% url 'edit_profile'%}">Edit Account</a>
+            <a class="btn btn-md btn-primary ml-4" href="{% url 'changepassword' %}">change password</a>
+            <a class="btn btn-md btn-danger ml-4" href="{% url 'deleteAccount' user=user.username %}">Delete Account</a>
+        </div>
+    </div>
 
+    <hr>
+    {% if user.username|is_company %}
+        <div class="card border-dark mb-3 mx-5 mt-4 ">
+            <div class="card-header bg-transparent border-dark fs-4" >All Writers</div>
+                <div class="card-body ">
+                    <p class="card-text">Writer_name :  </p>
+                </div>
             </div>
         </div>
+    {% else %}
+        <div class="card border-dark mb-3 mx-5 mt-4 ">
+            <div class="card-header bg-transparent border-dark fs-4" >My Companies</div>
+                <div class="card-body ">
+                    <p class="card-text">company_name :  </p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
-    {% endfor %}
+
+    <div class="card border-dark mb-3 mx-5 mt-4 ">
+    <div class="card-header bg-transparent border-dark fs-4" >My Posts</div>
+        <div class="btn-group btn-group-toggle mb-3 mx-5 mt-4" data-toggle="buttons">
+            <button class="btn btn-outline-info {% if current_state == 'published' or current_state == '' %}active{% endif %}" id = "published">
+                Published
+            </button>
+            <button class="btn btn-outline-info {% if current_state == 'draft' %}active{% endif %}" id = "draft">
+                Drafts
+            </button>
+        </div>
+            <div class="card-body ">
+                <div class="row">
+                    {% for post_data in posts %}
+                    <div class="col-md-6 {% if post_data.statue == 'published' %}published{% endif %}">
+                        <div class="card mx-4 mb-3">
+                        <div class="card-body mx-3">
+                            <div class="row">
+                            <div class="col-md-6">
+                                <p>{{ post_data.title }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="text-end">{{ post_data.publish_date }}</p>
+                            </div>
+                            </div>
+                            <footer class="blockquote-footer">{{ post_data.content | truncatechars_html:20 }}</footer>
+                        </div>
+                        <div class="card-footer">
+                            <a class="btn btn-md btn-info ml-4" href="{% url 'detail_post' post_data.id %}">Read More</a>
+                            <a class="btn btn-md btn-primary ml-4" href="{% url 'edit_post' post_data.id %}">Edit Post</a>
+                            <a class="btn btn-md btn-danger ml-4" href="{% url 'delete_post' post_data.id %}">Delete Post</a>
+                        </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+               
+    
+    
+    {% comment %} <h3 class="mx-5">My Posts</h3>
+    <div class="btn-group btn-group-toggle mb-3 mx-5 mt-4" data-toggle="buttons">
+        <button class="btn btn-outline-info {% if current_state == 'published' or current_state == '' %}active{% endif %}" id = "published">
+            Published
+        </button>
+        <button class="btn btn-outline-info {% if current_state == 'draft' %}active{% endif %}" id = "draft">
+            Drafts
+        </button>
+    </div>
+
+    <div class="row">
+        {% for post_data in posts %}
+        <div class="col-md-6 {% if post_data.statue == 'published' %}published{% endif %}">
+            <div class="card mx-4 mb-3">
+            <div class="card-body mx-3">
+                <div class="row">
+                <div class="col-md-6">
+                    <p>{{ post_data.title }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="text-end">{{ post_data.publish_date }}</p>
+                </div>
+                </div>
+                <footer class="blockquote-footer">{{ post_data.content | truncatechars_html:20 }}</footer>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-md btn-info ml-4" href="{% url 'detail_post' post_data.id %}">Read More</a>
+                <a class="btn btn-md btn-primary ml-4" href="{% url 'edit_post' post_data.id %}">Edit Post</a>
+                <a class="btn btn-md btn-danger ml-4" href="{% url 'delete_post' post_data.id %}">Delete Post</a>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div> {% endcomment %}
+
+    <script>
+        // JavaScript to handle switching between Posts and Drafts
+        document.getElementById('published').addEventListener('click' , function(){
+            window.location.replace("{% url 'profile'  user=currentUser.username %}?status=published")
+        }) 
+        document.getElementById('draft').addEventListener('click' , function(){
+            window.location.replace("{% url 'profile'  user=currentUser.username %}?status=draft")
+        })
+        </script>
+</div>
 
 {% endblock content %}
